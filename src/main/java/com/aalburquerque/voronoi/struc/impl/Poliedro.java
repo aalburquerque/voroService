@@ -158,6 +158,110 @@ public class Poliedro extends DCEL implements Dibujable, Serializable {
 
 	private transient Graphics g;
 	private transient ICoord coord;
+	
+	/**
+	 * @param coord
+	 * @return
+	 */
+	public VoronoiOutput getVoronoiJSON( ICoord coord) {
+
+		VoronoiOutput oVoronoiOutput=new VoronoiOutput();
+		
+		// para conocer el factor por el que multiplicamos el segmento
+		// que separa regiones no acotadas
+
+		this.coord = coord;
+
+		ListIterator iterador = caras.listIterator();
+
+		Triangulo3d t;
+
+		// circuncentros
+
+		long[] cc, b1, b2;
+
+		boolean circuncentro_a_la_derecha;
+
+		NodoArista arista;
+
+		// para separar regiones no acotadas
+		long ux, uy; // vector de la arista
+		long uxorto, uyorto; // vector ortogonal a (ux,uy)
+
+		while (iterador.hasNext()) {
+
+			t = (Triangulo3d) iterador.next();
+
+			if (t.nz() < 0) {
+
+				ListAdaptor iter = caraIterator(t);
+
+				while (iter.hasNext()) {
+
+					arista = iter.next();
+
+					if (arista.caraIzq().nz() < 0 && arista.caraDer().nz() < 0) {
+
+						b1 = arista.caraIzq().circuncentro();
+						b2 = arista.caraDer().circuncentro();
+
+						oVoronoiOutput.addLine( coord.x(b1[0]), coord.y(b1[1]) ,coord.x(b2[0]) ,coord.y(b2[1]) );
+
+					} else if (arista.caraIzq().nz() < 0 && esDibujarNoAcotadas) {
+
+						// circuncentro
+
+						cc = arista.caraIzq().circuncentro();
+
+						ux = arista.des().x() - arista.ori().x();
+						uy = arista.des().y() - arista.ori().y();
+
+						circuncentro_a_la_derecha =
+
+								GC.area2(arista.ori().x(), arista.ori().y(), arista.des().x(), arista.des().y(), cc[0],
+										cc[1]) > 0;
+
+						// uyorto = !circuncentro_a_la_derecha ? ux : -ux ;
+						// uxorto = !circuncentro_a_la_derecha ? -uy : uy ;
+
+						uyorto = ux;
+						uxorto = -uy;
+						Line newSpecialLine=segmentoNoAcotadoJSON(cc, uxorto, uyorto, circuncentro_a_la_derecha);
+						if (newSpecialLine!=null)
+							oVoronoiOutput.addLine(newSpecialLine);
+
+					} else if (arista.caraDer().nz() < 0 && esDibujarNoAcotadas) {
+
+						// circuncentro
+
+						cc = arista.caraDer().circuncentro();
+
+						ux = arista.des().x() - arista.ori().x();
+						uy = arista.des().y() - arista.ori().y();
+
+						circuncentro_a_la_derecha =
+
+								GC.area2(arista.ori().x(), arista.ori().y(), arista.des().x(), arista.des().y(), cc[0],
+										cc[1]) > 0;
+
+						// uyorto = circuncentro_a_la_derecha ? ux : -ux ;
+						// uxorto = circuncentro_a_la_derecha ? -uy : uy ;
+
+						uyorto = -ux;
+						uxorto = uy;
+
+						Line newSpecialLine=segmentoNoAcotadoJSON(cc, uxorto, uyorto, circuncentro_a_la_derecha);
+						if (newSpecialLine!=null)
+							oVoronoiOutput.addLine(newSpecialLine);
+
+					}
+
+				}
+			}
+		}
+		return oVoronoiOutput;
+
+	}
 
 	private void dibujarVoronoi(Graphics g, ICoord coord) {
 
@@ -286,6 +390,21 @@ public class Poliedro extends DCEL implements Dibujable, Serializable {
 		);
 
 	}
+	
+	private Line segmentoNoAcotadoJSON(long p[], long ux, long uy, boolean derecha) {
+		
+		String result="";
+
+		if (!Util.dentroMarco(coord.x(p[0]), coord.y(p[1])))
+			return null;
+
+		for (factor = 0; Util.dentroMarco(coord.x(p[0] + factor * ux), coord.y(p[1] + factor * uy)); factor++)
+			;
+
+		return new Line( coord.x(p[0]) ,coord.y(p[1]) ,coord.x(p[0] + factor * ux) ,coord.y(p[1] + factor * uy) );		
+
+	}
+	
 
 	private void dibujarDelaunay(Graphics g, ICoord coord) {
 

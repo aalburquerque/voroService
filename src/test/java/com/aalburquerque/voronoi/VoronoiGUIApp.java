@@ -19,7 +19,6 @@ package com.aalburquerque.voronoi;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
-import java.awt.Toolkit;
 
 import javax.swing.JFrame;
 
@@ -50,7 +49,6 @@ public class VoronoiGUIApp extends JFrame {
 	 */
 	public VoronoiGUIApp() {
 		coord = new MyCoord();
-		Toolkit kit = Toolkit.getDefaultToolkit();
 		setSize(xmax, ymax);
 		pizarra = new Pizarra(coord);
 
@@ -64,22 +62,14 @@ public class VoronoiGUIApp extends JFrame {
 
 		Pizarra anterior = pizarra;
 		pizarra = new Pizarra(coord, false);
-
 		pizarra.incluye(instanciaCalculo.nube());
-
-		Poliedro elbicho = instanciaCalculo.poliedro();
-
+		Poliedro elbicho = instanciaCalculo.getPoliedro();
 		elbicho.setDibujarDelaunay(false);
 		elbicho.setDibujarNoAcotadas(true);
-
 		pizarra.incluye(elbicho);
-
 		Container contentPane = getContentPane();
-
 		contentPane.remove(anterior);
-
 		contentPane.add(pizarra, BorderLayout.CENTER);
-
 		setContentPane(contentPane); // esto sobraria
 
 	}
@@ -112,12 +102,10 @@ public class VoronoiGUIApp extends JFrame {
 	private class MyCoord implements ICoord {
 
 		public int x(long wx) {
-			// TODO Auto-generated method stub
 			return (int) wx + 20;
 		}
 
 		public int y(long wy) {
-			// TODO Auto-generated method stub
 			return (int) wy + 20;
 		}
 	}

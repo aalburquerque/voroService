@@ -508,9 +508,9 @@ public class Input {
 
 		} while (true);
 
-		for (int i = 0; i < total; i++) {
-			System.out.println(i + ".  [" + a[i].x() + " " + a[i].y() + "]");
-		}
+		//for (int i = 0; i < total; i++) {
+			//System.out.println(i + ".  [" + a[i].x() + " " + a[i].y() + "]");
+		//}
 
 		return a;
 	}

@@ -227,8 +227,8 @@ public class DivideYvenceras implements Serializable {
 
 		// devuelve el punto en el espacio asociado a este punto en el plano
 
-		A1 = puente.ori().getAsociado();
-		B1 = puente.des().getAsociado();
+		A1 = puente.ori().asociado();
+		B1 = puente.des().asociado();
 
 		caraAnterior = inicial = new Triangulo3d(A1, new Vertice3d(A1.x(), A1.y(), A1.z() + 1), B1);
 

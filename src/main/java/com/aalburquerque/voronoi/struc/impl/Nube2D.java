@@ -50,6 +50,12 @@ public class Nube2D extends Pila implements Dibujable, Serializable {
 			apilar(new Punto2D(A[i].x(), A[i].y()));
 	}
 
+	public Nube2D(InputPoints inputPoints) {
+		if (inputPoints!=null)
+		for (int i = 0; i < inputPoints.getPoints().size(); i++)
+			apilar(new Punto2D(inputPoints.getPoints().get(i).x(),inputPoints.getPoints().get(i).y()));
+	}
+
 	public void unoMas(long x, long y) {
 		apilar(new Punto2D(x, y));
 	}

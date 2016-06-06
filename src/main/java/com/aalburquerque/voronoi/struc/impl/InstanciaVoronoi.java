@@ -274,7 +274,7 @@ public class InstanciaVoronoi implements Serializable {
 	 * problema resuelta
 	 */
 
-	public Poliedro poliedro() {
+	public Poliedro getPoliedro() {
 		return poliedro;
 	}
 

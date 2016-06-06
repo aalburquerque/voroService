@@ -36,6 +36,10 @@ import com.aalburquerque.voronoi.util.GC;
 public class Punto2D implements Dibujable, Serializable {
 	private static final long serialVersionUID = 1L;
 	private long x, y;
+	
+	public Punto2D(){
+		
+	}
 
 	private Vertice3d asociado = null;
 
@@ -83,7 +87,7 @@ public class Punto2D implements Dibujable, Serializable {
 	 * 
 	 */
 
-	public Vertice3d getAsociado() {
+	public Vertice3d asociado() {
 
 		return asociado;
 	}
@@ -191,6 +195,22 @@ public class Punto2D implements Dibujable, Serializable {
 
 		return new Punto2D(x, y);
 
+	}
+
+	public long getX() {
+		return x;
+	}
+
+	public void setX(long x) {
+		this.x = x;
+	}
+
+	public long getY() {
+		return y;
+	}
+
+	public void setY(long y) {
+		this.y = y;
 	}
 
 }
